@@ -28,7 +28,7 @@ pipeline {
         stage('Pull Image') {
             steps {             
                 sh '''
-                  IMAGE_FULL_NAME=$DOCKER_USERNAME/$IMAGE_BASE_NAME:$IMAGE_TAG
+                  IMAGE_FULL_NAME=$DOCKER_USERNAME/$IMAGE_BASE_NAME:latest
                   docker pull $IMAGE_FULL_NAME || true
                 '''
             }
@@ -38,8 +38,6 @@ pipeline {
             steps {             
                 sh '''
                   IMAGE_FULL_NAME=$DOCKER_USERNAME/$IMAGE_BASE_NAME:$IMAGE_TAG
-                  
-                  # Apply your changes here, e.g., copy files, modify configuration, etc.
                   docker build -t $IMAGE_FULL_NAME .
                 '''
             }
