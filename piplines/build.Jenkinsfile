@@ -30,8 +30,8 @@ pipeline {
                 sh '''
                   IMAGE_FULL_NAME=$DOCKER_USERNAME/$IMAGE_BASE_NAME:$IMAGE_TAG
                 
-                  docker build -t $IMAGE_BASE_NAME  .
-                  docker push $IMAGE_BASE_NAME
+                  docker build -t $DOCKER_USERNAME/$IMAGE_BASE_NAME  .
+                  docker push $DOCKER_USERNAME/$IMAGE_BASE_NAME$IMAGE_BASE_NAME
                 '''
             }
         }
