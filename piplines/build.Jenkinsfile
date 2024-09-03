@@ -20,20 +20,21 @@ pipeline {
         stage('Docker setup') {
             steps {             
                 sh '''
-                  docker login -u $DOCKER_USERNAME -p $DOCKER_PASS
+                  echo $DOCKER_PASS | docker login -u $DOCKER_USERNAME --password-stdin
                 '''
             }
         }
         
-        stage('Build & Push') {
+        stage('Pull Image') {
             steps {             
                 sh '''
                   IMAGE_FULL_NAME=amirmirs/$IMAGE_BASE_NAME:$IMAGE_TAG
                 
-                  docker build -t $IMAGE_FULL_NAME .
-                  docker push $IMAGE_FULL_NAME
+                  docker pull $IMAGE_FULL_NAME
                 '''
             }
         }
+        
+        // Add additional stages here if you want to deploy or run the pulled image
     }
 }
