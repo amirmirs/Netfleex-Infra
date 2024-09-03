@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: netflix-api-tag
-        image: amirmirs/netflix-catalog-api:latest
+        image: amirmirs/netflix-catalog-api:5
 
 ---
 apiVersion: v1
