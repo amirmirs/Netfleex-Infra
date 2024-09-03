@@ -8,7 +8,7 @@ pipeline {
     }
     
     environment {        
-        IMAGE_TAG = "v1.0.$BUILD_NUMBER"
+        IMAGE_TAG = "latest"  // Default to latest if no specific versioning is required
         IMAGE_BASE_NAME = "netflix-frontend"
         
         DOCKER_CREDS = credentials('dockerhub')
@@ -34,7 +34,5 @@ pipeline {
                 '''
             }
         }
-        
-        // Add additional stages here if you want to deploy or run the pulled image
     }
 }
