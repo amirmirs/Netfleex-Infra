@@ -4,7 +4,7 @@ pipeline {
     }
     
     triggers {
-        githubPush()   // trigger the pipeline upon push event in github
+        githubPush()   // Trigger the pipeline upon push event in GitHub
     }
     
     environment {        
@@ -12,8 +12,10 @@ pipeline {
         IMAGE_BASE_NAME = "netflix-frontend"
         
         DOCKER_CREDS = credentials('dockerhub')
-        DOCKER_USERNAME = "${DOCKER_CREDS_USR}"  // The _USR suffix added to access the username value 
-        DOCKER_PASS = "${DOCKER_CREDS_PSW}"      // The _PSW suffix added to access the password value
+        DOCKER_USERNAME = "${DOCKER_CREDS_USR}"  // Access the username value 
+        DOCKER_PASS = "${DOCKER_CREDS_PSW}"      // Access the password value
+
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig')  // Assuming your kubeconfig is stored in Jenkins credentials
     } 
 
     stages {
@@ -33,6 +35,17 @@ pipeline {
                   docker build -t $IMAGE_FULL_NAME .
                   docker push $IMAGE_FULL_NAME
                 '''
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            steps {
+                withKubeConfig([credentialsId: KUBECONFIG_CREDENTIALS]) {
+                    sh '''
+                        kubectl set image deployment/netflix-frontend-deployment netflix-frontend=$DOCKER_USERNAME/$IMAGE_BASE_NAME:$IMAGE_TAG --record
+                        kubectl rollout status deployment/netflix-frontend-deployment
+                    '''
+                }
             }
         }
     }
