@@ -8,7 +8,7 @@ pipeline {
     }
     
     environment {        
-        IMAGE_TAG = "latest"  // Default to latest if no specific versioning is required
+        IMAGE_TAG = "v1.0.$BUILD_NUMBER"  // Incremental versioning with BUILD_NUMBER
         IMAGE_BASE_NAME = "netflix-frontend"
         
         DOCKER_CREDS = credentials('dockerhub')
@@ -25,12 +25,23 @@ pipeline {
             }
         }
         
-        stage('Pull Image') {
+        stage('Pull Existing Image') {
+            steps {             
+                sh '''
+                  IMAGE_FULL_NAME=amirmirs/$IMAGE_BASE_NAME:latest
+                
+                  docker pull $IMAGE_FULL_NAME || true  # Pull the existing image, ignore errors if it doesn't exist
+                '''
+            }
+        }
+        
+        stage('Build & Push') {
             steps {             
                 sh '''
                   IMAGE_FULL_NAME=amirmirs/$IMAGE_BASE_NAME:$IMAGE_TAG
                 
-                  docker pull $IMAGE_FULL_NAME
+                  docker build -t $IMAGE_FULL_NAME .
+                  docker push $IMAGE_FULL_NAME
                 '''
             }
         }
