@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netflix-frontend-dev
+  labels:
+    app: netflix-frontend-dev
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: netflix-frontend-dev
+  template:
+    metadata:
+        labels:
+          app: netflix-frontend-dev
+    spec:
+      containers:
+      - name: api
+        image: amirmirs/netflix-frontend
+        env:
+          - name: MOVIE_CATALOG_SERVICE
+            value: "http://nextflix-catalog-service:8080"
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextflix-frontend-service
+spec:
+  selector:
+    app: netflix-frontend-dev
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000   

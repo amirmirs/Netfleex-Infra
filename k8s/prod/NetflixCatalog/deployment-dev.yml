@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netflix-catalog-prod
+  labels:
+    app: netflix-catalog-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: netflix-catalog-prod
+  template:
+    metadata:
+        labels:
+          app: netflix-catalog-prod
+    spec:
+      containers:
+      - name: api
+        image: amirmirs/netflix-catalog-prod:v1.0.8
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextflix-catalog-service
+spec:
+  selector:
+    app: netflix-catalog-prod
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080      
