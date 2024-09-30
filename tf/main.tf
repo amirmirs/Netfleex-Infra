@@ -76,3 +76,21 @@ resource "aws_s3_bucket" "frontend_bucket" {
     Environment = var.env
   }
 }
+
+module "netflix_app_vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.8.1"
+
+  name = "<your-vpc-name>"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["<az1>", "<az2>", "..."]
+  private_subnets = ["<pr-subnet-CIDR-1>", "<pr-subnet-CIDR-2>"]
+  public_subnets  = ["<pub-subnet-CIDR-1>", "<pub-subnet-CIDR-2>"]
+
+  enable_nat_gateway = false
+
+  tags = {
+    Env         = var.env
+  }
+}
